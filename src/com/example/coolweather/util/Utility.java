@@ -45,64 +45,28 @@ public class Utility {
 		                case KXmlParser.START_TAG:{    
 		                    pyName=parser.getAttributeValue(null, "pyName");
 		                    quName=parser.getAttributeValue(null, "quName");
+		                    Province province=new Province();
+		                    province.setProvinceName(quName);
+		                    province.setProvinceCode(pyName);
+		                    coolWeatherDB.saveProvince(province);
 		                    break;
-		                }
-		                case XmlPullParser.END_TAG:{
-		                	String tag=parser.getAttributeValue(null, "china");
-							if("china".equals(tag)){
-								Log.d("Utility","quNmae is "+quName);
-								Log.d("Utility","pyNmae is "+pyName);
-							}
-							break;
 		                }
 		                case KXmlParser.END_DOCUMENT:{
 		                	keepParsing=false;
+		                	}
 		                }
-		             }
-				 }
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-//			try {
-//				XmlPullParserFactory factory=XmlPullParserFactory.newInstance();
-//				XmlPullParser xmlPullParser=factory.newPullParser();
-//				xmlPullParser.setInput(new StringReader(response));
-//				int eventType=xmlPullParser.getEventType();
-//				String quName="";
-//				String pyName="";
-//				while(eventType!=XmlPullParser.END_DOCUMENT){
-//					String nodeName=xmlPullParser.getName();
-//					switch (eventType) {
-//					case XmlPullParser.START_TAG:{
-//						if("quName".equals(nodeName)){
-//							quName=xmlPullParser.nextText();
-//						}else if("pyName".equals(nodeName)){
-//							pyName=xmlPullParser.nextText();
-//						}
-//						break;
-//					}
-//					case XmlPullParser.END_TAG:{
-//						if("china".equals(nodeName)){
-//							Log.d("Utility","quNmae is "+quName);
-//							Log.d("Utility","pyNmae is "+pyName);
-//						}
-//						break;
-//					}
-//					default:
-//						break;
-//					}
-//				}
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				e.printStackTrace();
-//			}
+				 	}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}
 			return true;
 		}
 		return false;	
 	}
 	/**
-	 * 解析JSON数据
-	 * //			try {
+	 * 			解析JSON数据
+	 *  //			try {
 		//				JSONObject jsonObject=new JSONObject(response);
 		//				JSONArray jsonArray=jsonObject.getJSONArray("retData");
 		//				for(int i=0;i<jsonArray.length();i++){
@@ -124,19 +88,41 @@ public class Utility {
 	 */
 	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB,String response,int provinceId){
 		if(!TextUtils.isEmpty(response)){
-			String[] allCities=response.split(",");
-			if(allCities!=null&&allCities.length>0){
-				for(String c:allCities){
-					String[] array=c.split("\\|");
-					City city=new City();
-					city.setCityCode(array[0]);
-					city.setCityName(array[1]);
-					city.setProvinceId(provinceId);
-					//将解析出来的数据存储带City表
-					coolWeatherDB.saveCity(city);
+				/*
+				 * 根据省份查询解析获得的城市信息
+				 */
+			KXmlParser parser = new KXmlParser();  
+			 try {
+				 parser.setInput(new StringReader(response));
+				 String cityName="";
+				 String pyName="";
+				 boolean keepParsing = true;
+				 while(keepParsing){  
+		                int type = parser.next();  
+		                switch(type){
+		                case KXmlParser.START_DOCUMENT:  
+		                    //startDocument(parser);//这里总是执行不到，可以去掉  
+		                    break; 
+		                case KXmlParser.START_TAG:{    
+		                    pyName=parser.getAttributeValue(null, "pyName");
+		                    cityName=parser.getAttributeValue(null, "cityname");
+		                    City city=new City();
+		                    city.setCityName(cityName);
+		                    city.setCityCode(pyName);
+		                    city.setProvinceId(provinceId);
+		                    coolWeatherDB.saveCity(city);
+		                    break;
+		                }
+		                case KXmlParser.END_DOCUMENT:{
+		                	keepParsing=false;
+		                	}
+		                }
+				 	}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
 				}
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}

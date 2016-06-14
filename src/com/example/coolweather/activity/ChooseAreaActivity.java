@@ -94,11 +94,12 @@ public class ChooseAreaActivity extends Activity{
 	 */
 	private void queryProvinces(){
 		provinceList=coolWeatherDB.loadProvinces();
-		provinceList.removeAll(provinceList);
 		if(provinceList.size()>0){
 			dataList.clear();
 			for(Province province:provinceList){
-				dataList.add(province.getProvinceName());
+				if(province.getProvinceName()!=null){
+					dataList.add(province.getProvinceName());
+				}
 			}
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
@@ -116,7 +117,10 @@ public class ChooseAreaActivity extends Activity{
 		if(cityList.size()>0){
 			dataList.clear();
 			for(City city:cityList){
-				dataList.add(city.getCityName());
+				if(city.getCityName()!=null){
+					dataList.add(city.getCityName());
+				}
+				
 			}
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
@@ -150,7 +154,8 @@ public class ChooseAreaActivity extends Activity{
 	private void queryFromServer(final String code,final String type){
 		String address;
 		if(!TextUtils.isEmpty(code)){
-			address="http://apis.baidu.com/tianyiweather/basicforecast/weatherapi"+"?"+"area="+code;
+//			address="http://apis.baidu.com/tianyiweather/basicforecast/weatherapi"+"?"+"area="+code;
+			address="http://flash.weather.com.cn/wmaps/xml/"+code+".xml";
 		}else{
 //			address="http://apis.baidu.com/apistore/weatherservice/citylist?cityname=%E6%9C%9D%E9%98%B3";
 			address="http://flash.weather.com.cn/wmaps/xml/china.xml";
@@ -165,9 +170,9 @@ public class ChooseAreaActivity extends Activity{
 				if("province".equals(type)){
 					result=Utility.handleProvincesResponse(coolWeatherDB, response);
 				}else if("city".equals(type)){
-					result=Utility.handleCitiesResponse(coolWeatherDB, response, selectedCity.getId());
+					result=Utility.handleCitiesResponse(coolWeatherDB, response, selectedProvince.getId());
 				}
-				if(false){
+				if(result){
 					//通过runOnUiThread()方法回到主线程处理逻辑
 					runOnUiThread(new Runnable() {
 						@Override
