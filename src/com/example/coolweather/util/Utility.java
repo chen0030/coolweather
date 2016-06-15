@@ -1,27 +1,14 @@
 package com.example.coolweather.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.Array;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.kxml2.io.KXmlParser;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.R.bool;
-import android.provider.DocumentsContract.Document;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.Xml;
-import android.widget.Toast;
 
 import com.example.coolweather.db.CoolWeatherDB;
 import com.example.coolweather.model.City;
 import com.example.coolweather.model.County;
-import com.example.coolweather.model.MyApplication;
 import com.example.coolweather.model.Province;
 public class Utility {
 	/**
@@ -45,10 +32,12 @@ public class Utility {
 		                case KXmlParser.START_TAG:{    
 		                    pyName=parser.getAttributeValue(null, "pyName");
 		                    quName=parser.getAttributeValue(null, "quName");
-		                    Province province=new Province();
-		                    province.setProvinceName(quName);
-		                    province.setProvinceCode(pyName);
-		                    coolWeatherDB.saveProvince(province);
+		                    if(pyName!=null&quName!=null){
+			                    Province province=new Province();
+			                    province.setProvinceName(quName);
+			                    province.setProvinceCode(pyName);
+			                    coolWeatherDB.saveProvince(province);
+		                    }
 		                    break;
 		                }
 		                case KXmlParser.END_DOCUMENT:{
@@ -106,11 +95,13 @@ public class Utility {
 		                case KXmlParser.START_TAG:{    
 		                    pyName=parser.getAttributeValue(null, "pyName");
 		                    cityName=parser.getAttributeValue(null, "cityname");
-		                    City city=new City();
-		                    city.setCityName(cityName);
-		                    city.setCityCode(pyName);
-		                    city.setProvinceId(provinceId);
-		                    coolWeatherDB.saveCity(city);
+		                    if(pyName!=null&cityName!=null){
+			                    City city=new City();
+			                    city.setCityName(cityName);
+			                    city.setCityCode(pyName);
+			                    city.setProvinceId(provinceId);
+			                    coolWeatherDB.saveCity(city);
+		                    }
 		                    break;
 		                }
 		                case KXmlParser.END_DOCUMENT:{
@@ -132,20 +123,41 @@ public class Utility {
 	 */
 	public synchronized static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB,String response,int cityId){
 		if(!TextUtils.isEmpty(response)){
-			String[] allCounties=response.split(",");
-			if(allCounties!=null&&allCounties.length>0){
-				for(String c:allCounties){
-					String[] array=c.split("\\|");
-					County county=new County();
-					county.setCountyCode(array[0]);
-					county.setCountyName(array[1]);
-					county.setCityId(cityId);
-					//将解析出来的数据存储带City表
-					coolWeatherDB.saveCounty(county);
+			KXmlParser parser = new KXmlParser();  
+			 try {
+				 parser.setInput(new StringReader(response));
+				 String cityName="";
+				 String pyName="";
+				 boolean keepParsing = true;
+				 while(keepParsing){  
+		                int type = parser.next();  
+		                switch(type){
+		                case KXmlParser.START_DOCUMENT:  
+		                    //startDocument(parser);//这里总是执行不到，可以去掉  
+		                    break; 
+		                case KXmlParser.START_TAG:{    
+		                    pyName=parser.getAttributeValue(null, "url");
+		                    cityName=parser.getAttributeValue(null, "cityname");
+		                    if(pyName!=null&cityName!=null){
+			                    County county=new County();
+			                    county.setCountyName(cityName);
+			                    county.setCountyCode(pyName);
+			                    county.setCityId(cityId);
+			                    coolWeatherDB.saveCounty(county);
+		                    }
+		                    break;
+		                }
+		                case KXmlParser.END_DOCUMENT:{
+		                	keepParsing=false;
+		                	}
+		                }
+				 	}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
 				}
 				return true;
 			}
-		}
 		return false;
 	}
 

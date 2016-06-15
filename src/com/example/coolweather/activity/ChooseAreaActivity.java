@@ -94,7 +94,7 @@ public class ChooseAreaActivity extends Activity{
 	 */
 	private void queryProvinces(){
 		provinceList=coolWeatherDB.loadProvinces();
-		if(provinceList.size()>0){
+		if(provinceList.size()>2){
 			dataList.clear();
 			for(Province province:provinceList){
 				if(province.getProvinceName()!=null){
@@ -171,6 +171,8 @@ public class ChooseAreaActivity extends Activity{
 					result=Utility.handleProvincesResponse(coolWeatherDB, response);
 				}else if("city".equals(type)){
 					result=Utility.handleCitiesResponse(coolWeatherDB, response, selectedProvince.getId());
+				}else if("county".equals(type)){
+					result=Utility.handleCountiesResponse(coolWeatherDB, response, selectedCity.getId());
 				}
 				if(result){
 					//通过runOnUiThread()方法回到主线程处理逻辑
