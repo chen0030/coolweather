@@ -1,10 +1,19 @@
 package com.example.coolweather.util;
 
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.kxml2.io.KXmlParser;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.coolweather.db.CoolWeatherDB;
 import com.example.coolweather.model.City;
@@ -19,7 +28,6 @@ public class Utility {
 			 KXmlParser parser = new KXmlParser();  
 			 try {
 				 parser.setInput(new StringReader(response));
-				 int eventType=parser.getEventType();
 				 String quName="";
 				 String pyName="";
 				 boolean keepParsing = true;
@@ -159,6 +167,47 @@ public class Utility {
 				return true;
 			}
 		return false;
+	}
+	/**
+	 * 解析服务器返回的JSON数据，并将解析出来的数据存储在本地
+	 */
+	public static void handleWeatherResponse(Context context,String response,String cityName,String weatherCode){
+		try {
+							JSONObject jsonObject=new JSONObject(response).getJSONObject("forecast");
+							JSONObject jsonObject1=jsonObject.getJSONObject("24h");
+							JSONObject jsonObject2=jsonObject1.getJSONObject(weatherCode);
+							JSONArray jsonArray=jsonObject2.getJSONArray("1001001");
+							String temp1="";
+							String temp2="";
+							String weatherDesp="";
+							for(int i=0;i<jsonArray.length();i++){
+								JSONObject jsonObjectResponse=(JSONObject)jsonArray.opt(i);
+								temp1 =jsonObjectResponse.getString("003");
+								temp2 =jsonObjectResponse.getString("004");
+								weatherDesp=jsonObjectResponse.getString("001");
+								Log.d("Utility","白天温度  "+temp2);
+								Log.d("Utility","夜晚温度 "+temp2);
+								Log.d("Utility","天气现象编码 "+weatherDesp);	
+							}
+							String pTime=jsonObject2.getString("000");
+							saveWeatherInfo(context,cityName,weatherCode,temp1,temp2,weatherDesp,pTime);
+						} catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+	}
+	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String temp1,String temp2,String weatherDesp,String pTime){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
+		SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putBoolean("city_selected", true);
+		editor.putString("city_name", cityName);
+		editor.putString("weather_code", weaherCode);
+		editor.putString("temp1", temp1);
+		editor.putString("temp2", temp2);
+		editor.putString("weather_desp", weatherDesp);
+		editor.putString("publish_time", pTime);
+		editor.putString("current_date",sdf.format(new Date()) );
+		editor.commit();
 	}
 
 }

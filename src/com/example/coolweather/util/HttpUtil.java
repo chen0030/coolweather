@@ -21,8 +21,8 @@ public class HttpUtil {
 					connection.setRequestMethod("GET");
 					connection.setConnectTimeout(8000);
 					connection.setReadTimeout(8000);
-			//		connection.setRequestProperty("apikey",  "2f51484fcd95bdd97811f5b06c8e3f63");
-			//		connection.connect();
+					connection.setRequestProperty("apikey",  "2f51484fcd95bdd97811f5b06c8e3f63");
+					connection.connect();
 					InputStream in=connection.getInputStream();
 					BufferedReader reader=new BufferedReader(new InputStreamReader(in));
 					StringBuilder response=new StringBuilder();
