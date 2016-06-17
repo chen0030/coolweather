@@ -18,7 +18,9 @@ import android.util.Log;
 import com.example.coolweather.db.CoolWeatherDB;
 import com.example.coolweather.model.City;
 import com.example.coolweather.model.County;
+import com.example.coolweather.model.JudgmentMunicipalities;
 import com.example.coolweather.model.Province;
+import com.example.coolweather.model.WeatherPhenomenon;
 public class Utility {
 	/**
 	 * 解析和处理服务器返回的省级数据
@@ -37,7 +39,7 @@ public class Utility {
 		                case KXmlParser.START_DOCUMENT:  
 		                    //startDocument(parser);//这里总是执行不到，可以去掉  
 		                    break; 
-		                case KXmlParser.START_TAG:{    
+		                case KXmlParser.START_TAG:{
 		                    pyName=parser.getAttributeValue(null, "pyName");
 		                    quName=parser.getAttributeValue(null, "quName");
 		                    if(pyName!=null&quName!=null){
@@ -100,17 +102,32 @@ public class Utility {
 		                case KXmlParser.START_DOCUMENT:  
 		                    //startDocument(parser);//这里总是执行不到，可以去掉  
 		                    break; 
-		                case KXmlParser.START_TAG:{    
-		                    pyName=parser.getAttributeValue(null, "pyName");
-		                    cityName=parser.getAttributeValue(null, "cityname");
-		                    if(pyName!=null&cityName!=null){
-			                    City city=new City();
-			                    city.setCityName(cityName);
-			                    city.setCityCode(pyName);
-			                    city.setProvinceId(provinceId);
-			                    coolWeatherDB.saveCity(city);
-		                    }
-		                    break;
+		                case KXmlParser.START_TAG:{  
+		                	JudgmentMunicipalities municipalities=new JudgmentMunicipalities();
+		                	if(municipalities.isMunicipalities(parser.getAttributeValue(null, "pyName"))){
+		                		 Province province=new Province();
+		                		 province.setIsMunicipalities(true);
+		                		 pyName=parser.getAttributeValue(null, "url");
+				                 cityName=parser.getAttributeValue(null, "cityname");
+				                 if(pyName!=null&cityName!=null){
+					                 province.setProvinceName(cityName);
+					                 province.setProvinceCode(pyName);
+					                 coolWeatherDB.saveProvince(province);
+				                 }
+		                	}else{
+		                		Province province=new Province();
+		                		province.setIsMunicipalities(false);
+			                    pyName=parser.getAttributeValue(null, "pyName");
+			                    cityName=parser.getAttributeValue(null, "cityname");
+			                    if(pyName!=null&cityName!=null){
+				                    City city=new City();
+				                    city.setCityName(cityName);
+				                    city.setCityCode(pyName);
+				                    city.setProvinceId(provinceId);
+				                    coolWeatherDB.saveCity(city);
+			                    }
+		                	}
+			                    break;
 		                }
 		                case KXmlParser.END_DOCUMENT:{
 		                	keepParsing=false;
@@ -173,41 +190,67 @@ public class Utility {
 	 */
 	public static void handleWeatherResponse(Context context,String response,String cityName,String weatherCode){
 		try {
-							JSONObject jsonObject=new JSONObject(response).getJSONObject("forecast");
-							JSONObject jsonObject1=jsonObject.getJSONObject("24h");
-							JSONObject jsonObject2=jsonObject1.getJSONObject(weatherCode);
-							JSONArray jsonArray=jsonObject2.getJSONArray("1001001");
-							String temp1="";
-							String temp2="";
-							String weatherDesp="";
-							for(int i=0;i<jsonArray.length();i++){
+							JSONObject jsonObject=new JSONObject(response).getJSONObject("forecast").getJSONObject("24h").getJSONObject(weatherCode);
+						//	JSONObject jsonObject1=jsonObject.getJSONObject("24h");
+						//	JSONObject jsonObject2=jsonObject1.getJSONObject(weatherCode);
+							JSONArray jsonArray=jsonObject.getJSONArray("1001001");
+							int tempLength=jsonArray.length();
+							String[] tempDay=new String[tempLength];
+							String[] tempNight=new String[tempLength];
+							String[] weatherPhenomenonCode=new String[tempLength];
+							for(int i=0;i<tempLength;i++){
 								JSONObject jsonObjectResponse=(JSONObject)jsonArray.opt(i);
-								temp1 =jsonObjectResponse.getString("003");
-								temp2 =jsonObjectResponse.getString("004");
-								weatherDesp=jsonObjectResponse.getString("001");
-								Log.d("Utility","白天温度  "+temp2);
-								Log.d("Utility","夜晚温度 "+temp2);
-								Log.d("Utility","天气现象编码 "+weatherDesp);	
+								tempDay[i] =jsonObjectResponse.getString("003");
+								tempNight[i] =jsonObjectResponse.getString("004");
+								WeatherPhenomenon weatherPhenomenon=new WeatherPhenomenon();
+								weatherPhenomenonCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("001"));
+								Log.d("Utility","白天温度  "+tempDay[i]);
+								Log.d("Utility","夜晚温度 "+tempNight[i]);
+								Log.d("Utility","天气现象编码 "+weatherPhenomenonCode[i]);	
 							}
-							String pTime=jsonObject2.getString("000");
-							saveWeatherInfo(context,cityName,weatherCode,temp1,temp2,weatherDesp,pTime);
+							String pTime=jsonObject.getString("000");
+							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonCode,pTime,tempLength);
 						} catch (Exception e) {
 							// TODO: handle exception
 							e.printStackTrace();
 						}
 	}
-	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String temp1,String temp2,String weatherDesp,String pTime){
+	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String[] tempDay,String[] tempNight,String[] weatherPhenomenonCode,String pTime,int tempLength){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
 		SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("weather_code", weaherCode);
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
-		editor.putString("weather_desp", weatherDesp);
 		editor.putString("publish_time", pTime);
 		editor.putString("current_date",sdf.format(new Date()) );
+		editor.putInt("temp_length", tempLength);
+		//存放三天的天气信息
+		String regularEx = "#";
+		String str = "";
+		if(tempDay != null && tempDay.length > 0) {
+			for (String value : tempDay) {
+				str += value;
+				str += regularEx;
+			}
+			editor.putString("temp_day", str);	
+			str="";
+		}
+		if(tempNight != null && tempNight.length > 0) {
+			for (String value : tempNight) {
+				str += value;
+				str += regularEx;
+			}
+			editor.putString("temp_night", str);	
+			str="";
+		}
+		if(weatherPhenomenonCode != null && weatherPhenomenonCode.length > 0) {
+			for (String value : weatherPhenomenonCode) {
+				str += value;
+				str += regularEx;
+			}
+			editor.putString("weather_phenomenon_code", str);	
+			str="";
+		}
 		editor.commit();
 	}
-
 }

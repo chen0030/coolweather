@@ -7,18 +7,33 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#484E61">
+        <Button 
+            android:id="@+id/switch_city"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/house_icon_change"/>
         <TextView 
-        android:id="@+id/city_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="#fff"
-        android:textSize="24sp"/>
+	        android:id="@+id/city_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:textColor="#fff"
+	        android:textSize="24sp"/>
+        <Button 
+            android:id="@+id/refresh_weather"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_refresh"/>
     </RelativeLayout>
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:background="#27A5F9">
         <TextView 
         android:id="@+id/publishe_text"
@@ -30,7 +45,7 @@
         android:textColor="#fff"
         android:textSize="18sp"/>
          <LinearLayout 
-             android:id="@+id/weather_info_layout"
+            android:id="@+id/weather_info_layout"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
@@ -38,7 +53,7 @@
 	        <TextView 
 		        android:id="@+id/current_date"
 		        android:layout_width="wrap_content"
-		        android:layout_height="40dp"
+		        android:layout_height="50dp"
 		        android:gravity="center"
 		        android:textColor="#fff"
 		        android:textSize="18sp"/>
@@ -49,7 +64,7 @@
 		        android:layout_gravity="center_horizontal"
 		        android:gravity="center"
 		        android:textColor="#fff"
-		        android:textSize="18sp"/>
+		        android:textSize="40sp"/>
 	        <LinearLayout 
 	            android:layout_width="wrap_content"
 	            android:layout_height="60dp"
@@ -68,7 +83,7 @@
 		        android:layout_gravity="center_horizontal"
 		        android:layout_marginLeft="10dp"
 		        android:layout_marginRight="10dp"
-		        android:text="~"
+		        android:text="@string/temp_string"
 		        android:textColor="#fff"
 		        android:textSize="40sp"/>
 	            <TextView 
@@ -80,5 +95,165 @@
 		        android:textSize="40sp"/>
 	        </LinearLayout>
          </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#6699cc">
+       <LinearLayout 
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:baselineAligned="false"
+           android:orientation="horizontal">
+
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1.00"
+               android:orientation="vertical" >
+
+               <TextView 
+		        android:id="@+id/weather_desp_today"
+		        android:layout_width="wrap_content"
+		        android:layout_height="50dp"
+		        android:layout_gravity="center_horizontal"
+		        android:gravity="center"
+		        android:textColor="#fff"
+		        android:textSize="20sp"/>
+
+		        <LinearLayout
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center_horizontal"
+		            android:orientation="horizontal" >
+
+		            <TextView 
+			        android:id="@+id/temp_day_today"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_horizontal"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:text="@string/temp_string"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:id="@+id/temp_night_today"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		        </LinearLayout>
+           </LinearLayout>
+           
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1.00"
+               android:orientation="vertical" >
+               
+                <TextView 
+		        android:id="@+id/weather_desp_tomorrow"
+		        android:layout_width="wrap_content"
+		        android:layout_height="50dp"
+		        android:layout_gravity="center_horizontal"
+		        android:gravity="center"
+		        android:textColor="#fff"
+		        android:textSize="20sp"/>
+
+		        <LinearLayout
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center_horizontal"
+		            android:orientation="horizontal" >
+
+		            <TextView 
+			        android:id="@+id/temp_day_tomorrow"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_horizontal"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:text="@string/temp_string"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:id="@+id/temp_night_tomorrow"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		        </LinearLayout>
+               
+               
+           </LinearLayout>
+           
+           <LinearLayout
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="1.00"
+               android:orientation="vertical" >
+               
+               <TextView 
+		        android:id="@+id/weather_desp_acquired"
+		        android:layout_width="wrap_content"
+		        android:layout_height="50dp"
+		        android:layout_gravity="center_horizontal"
+		        android:gravity="center"
+		        android:textColor="#fff"
+		        android:textSize="20sp"/>
+
+		        <LinearLayout
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center_horizontal"
+		            android:orientation="horizontal" >
+
+		            <TextView 
+			        android:id="@+id/temp_day_acquired"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_horizontal"
+			        android:layout_marginLeft="10dp"
+			        android:layout_marginRight="10dp"
+			        android:text="@string/temp_string"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		            <TextView 
+			        android:id="@+id/temp_night_acquired"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_gravity="center_vertical"
+			        android:textColor="#fff"
+			        android:textSize="20sp"/>
+		        </LinearLayout>
+               
+               
+               
+           </LinearLayout>
+           
+           
+       </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
