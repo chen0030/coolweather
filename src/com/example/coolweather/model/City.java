@@ -6,6 +6,7 @@ public class City {
 	private String cityName;
 	private String cityCode;
 	private int provinceId;
+	private boolean isMunicipalities;
 	public int getId(){
 		return id;
 	}
@@ -29,5 +30,11 @@ public class City {
 	}
 	public void setProvinceId(int provinceId){
 		this.provinceId=provinceId;
+	}
+	public boolean getIsMunicipalities(){
+		return isMunicipalities;
+	}
+	public void setIsMunicipalities(boolean jugment){
+		this.isMunicipalities=jugment;
 	}
 }

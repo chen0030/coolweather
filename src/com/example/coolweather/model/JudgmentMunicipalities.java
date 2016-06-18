@@ -23,6 +23,8 @@ public class JudgmentMunicipalities {
 			return true;
 		}else if(cityName.equals("diaoyudao")){
 			return true;
+		}else if(cityName.equals("hainan")){
+			return true;
 		}
 		return false;
 	}

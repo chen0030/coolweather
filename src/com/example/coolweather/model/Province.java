@@ -26,7 +26,7 @@ public class Province {
 	public boolean getIsMunicipalities(){
 		return isMunicipalities;
 	}
-	public void setIsMunicipalities(boolean id){
-		this.isMunicipalities=id;
+	public void setIsMunicipalities(boolean jugment){
+		this.isMunicipalities=jugment;
 	}
 }

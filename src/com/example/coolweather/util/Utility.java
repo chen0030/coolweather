@@ -25,7 +25,6 @@ public class Utility {
 	/**
 	 * 判断是否为直辖市
 	 */
-	private static boolean isMunicipalities;
 	/**
 	 * 解析和处理服务器返回的省级数据
 	 */
@@ -97,25 +96,27 @@ public class Utility {
 				 String pyName="";
 				 String quName="";
 				 boolean keepParsing = true;
+				 boolean isMunicipalities=false;
+				 City city=new City();
 				 JudgmentMunicipalities municipalities=new JudgmentMunicipalities();
 				 isMunicipalities=municipalities.isMunicipalities(cityName);
-				 Province province=new Province();
-				 province.setIsMunicipalities(isMunicipalities);
+				 city.setIsMunicipalities(isMunicipalities);
 				 while(keepParsing){  
 		                int type = parser.next();  
 		                switch(type){
 		                case KXmlParser.START_DOCUMENT:  
 		                    break; 
 		                case KXmlParser.START_TAG:{ 
-		                	City city=new City();
 		                	if(isMunicipalities){
 		                		  if(parser.getAttributeValue(null, "url")!=null&parser.getAttributeValue(null, "cityname")!=null){
 			                		 pyName=parser.getAttributeValue(null, "url");
 					                 quName=parser.getAttributeValue(null, "cityname");
 		                		  }
 		                		  }else{
-				                    pyName=parser.getAttributeValue(null, "pyName");
-				                    quName=parser.getAttributeValue(null, "cityname");}
+		                			  if(parser.getAttributeValue(null, "pyName")!=null&parser.getAttributeValue(null, "cityname")!=null){
+		                				  pyName=parser.getAttributeValue(null, "pyName");
+						                    quName=parser.getAttributeValue(null, "cityname");}
+		                			  }
 			                 if(pyName.length()>0&quName.length()>0){
 			                     city.setCityName(quName);
 				                 city.setCityCode(pyName);
@@ -192,19 +193,31 @@ public class Utility {
 							int tempLength=jsonArray.length();
 							String[] tempDay=new String[tempLength];
 							String[] tempNight=new String[tempLength];
-							String[] weatherPhenomenonCode=new String[tempLength];
+							String[] weatherPhenomenonDayCode=new String[tempLength];
+							String[] weatherPhenomenonNightCode=new String[tempLength];
 							for(int i=0;i<tempLength;i++){
 								JSONObject jsonObjectResponse=(JSONObject)jsonArray.opt(i);
-								tempDay[i] =jsonObjectResponse.getString("003");
-								tempNight[i] =jsonObjectResponse.getString("004");
+								if(jsonObjectResponse.getString("003").length()>0){
+									tempDay[i] =jsonObjectResponse.getString("003");  //003白天温度
+									tempNight[i] =jsonObjectResponse.getString("004");//004晚上温度
+								}else{
+									tempDay[i] ="No Temp";
+									tempNight[i] =jsonObjectResponse.getString("004");
+								}
 								WeatherPhenomenon weatherPhenomenon=new WeatherPhenomenon();
-								weatherPhenomenonCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("001"));
+								if(jsonObjectResponse.getString("001").length()>0){
+									weatherPhenomenonDayCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("001"));//001白天天气现象编码
+								}else{
+									weatherPhenomenonDayCode[i]="The day is over";
+									weatherPhenomenonNightCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("002"));
+								}
+								 //00晚上天气现象编码	
 								Log.d("Utility","白天温度  "+tempDay[i]);
 								Log.d("Utility","夜晚温度 "+tempNight[i]);
-								Log.d("Utility","天气现象编码 "+weatherPhenomenonCode[i]);	
+								Log.d("Utility","天气现象编码 "+weatherPhenomenonDayCode[i]);	
 							}
 							String pTime=jsonObject.getString("000");
-							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonCode,pTime,tempLength);
+							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonDayCode,pTime,tempLength);
 						} catch (Exception e) {
 							// TODO: handle exception
 							e.printStackTrace();
