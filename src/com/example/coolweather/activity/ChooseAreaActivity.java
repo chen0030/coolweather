@@ -8,10 +8,12 @@ import java.util.List;
 
 
 
+
 import com.example.coolweather.R;
 import com.example.coolweather.db.CoolWeatherDB;
 import com.example.coolweather.model.City;
 import com.example.coolweather.model.County;
+import com.example.coolweather.model.JudgmentMunicipalities;
 import com.example.coolweather.model.Province;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
@@ -79,12 +81,12 @@ public class ChooseAreaActivity extends Activity{
 		isFromWeatherActivity=getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
 		//已经选择了城市切不是从WeatherActivity中跳转过来，才会直接跳转到WeatherActivity
-		if(prefs.getBoolean("city_selected", false)&&!isFromWeatherActivity){
-			Intent intent=new Intent(this,WeatherActivity.class);
-			startActivity(intent);
-			finish();
-			return;
-		}
+//		if(prefs.getBoolean("city_selected", false)&&!isFromWeatherActivity){
+//			Intent intent=new Intent(this,WeatherActivity.class);
+//			startActivity(intent);
+//			finish();
+//			return;
+//		}
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		listView=(ListView)findViewById(R.id.list_view);
@@ -103,6 +105,12 @@ public class ChooseAreaActivity extends Activity{
 					queryCities();
 				}else if(currentLevel==LEVEL_CITY) {
 					selectedCity=cityList.get(index);
+					String cityCode=selectedCity.getCityCode();
+					String cityName=selectedCity.getCityName();
+					Log.d("ChooseArea", "County Code is "+cityCode);
+					Log.d("ChooseArea", "County Name is "+cityName);
+					Province province=new Province();
+					boolean jugment=province.getIsMunicipalities();
 					queryCounties();
 				}else if(currentLevel==LEVEL_COUNTY){
 					County selectCounty=countyList.get(index);
@@ -203,7 +211,7 @@ public class ChooseAreaActivity extends Activity{
 				if("province".equals(type)){
 					result=Utility.handleProvincesResponse(coolWeatherDB, response);
 				}else if("city".equals(type)){
-					result=Utility.handleCitiesResponse(coolWeatherDB, response, selectedProvince.getId());
+					result=Utility.handleCitiesResponse(coolWeatherDB, response, selectedProvince.getId(),code);
 				}else if("county".equals(type)){
 					result=Utility.handleCountiesResponse(coolWeatherDB, response, selectedCity.getId());
 				}

@@ -4,7 +4,7 @@ public class Province {
 	private int id;
 	private String provinceName;
 	private String provinceCode;
-	private boolean isMunicipalities=false;
+	private boolean isMunicipalities;
 	public int getId(){
 		return id;
 	}
@@ -26,8 +26,7 @@ public class Province {
 	public boolean getIsMunicipalities(){
 		return isMunicipalities;
 	}
-	public boolean setIsMunicipalities(boolean id){
-		return this.isMunicipalities=id;
+	public void setIsMunicipalities(boolean id){
+		this.isMunicipalities=id;
 	}
-
 }

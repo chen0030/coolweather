@@ -23,6 +23,10 @@ import com.example.coolweather.model.Province;
 import com.example.coolweather.model.WeatherPhenomenon;
 public class Utility {
 	/**
+	 * 判断是否为直辖市
+	 */
+	private static boolean isMunicipalities;
+	/**
 	 * 解析和处理服务器返回的省级数据
 	 */
 	public synchronized static boolean handleProvincesResponse(CoolWeatherDB coolWeatherDB,String response){
@@ -37,19 +41,16 @@ public class Utility {
 		                int type = parser.next();  
 		                switch(type){
 		                case KXmlParser.START_DOCUMENT:  
-		                    //startDocument(parser);//这里总是执行不到，可以去掉  
 		                    break; 
 		                case KXmlParser.START_TAG:{
-		                    pyName=parser.getAttributeValue(null, "pyName");
-		                    quName=parser.getAttributeValue(null, "quName");
-		                    if(pyName!=null&quName!=null){
-			                    Province province=new Province();
-			                    province.setProvinceName(quName);
-			                    province.setProvinceCode(pyName);
-			                    coolWeatherDB.saveProvince(province);
-		                    }
+		                	pyName=parser.getAttributeValue(null, "pyName");
+		                	quName=parser.getAttributeValue(null, "quName");
+				            Province province=new Province();
+				            province.setProvinceName(quName);
+				            province.setProvinceCode(pyName);
+				            coolWeatherDB.saveProvince(province);
+			                 }
 		                    break;
-		                }
 		                case KXmlParser.END_DOCUMENT:{
 		                	keepParsing=false;
 		                	}
@@ -85,7 +86,7 @@ public class Utility {
 	/**
 	 * 解析和处理服务器返回的市级数据
 	 */
-	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB,String response,int provinceId){
+	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB,String response,int provinceId,String cityName){
 		if(!TextUtils.isEmpty(response)){
 				/*
 				 * 根据省份查询解析获得的城市信息
@@ -93,40 +94,34 @@ public class Utility {
 			KXmlParser parser = new KXmlParser();  
 			 try {
 				 parser.setInput(new StringReader(response));
-				 String cityName="";
 				 String pyName="";
+				 String quName="";
 				 boolean keepParsing = true;
+				 JudgmentMunicipalities municipalities=new JudgmentMunicipalities();
+				 isMunicipalities=municipalities.isMunicipalities(cityName);
+				 Province province=new Province();
+				 province.setIsMunicipalities(isMunicipalities);
 				 while(keepParsing){  
 		                int type = parser.next();  
 		                switch(type){
 		                case KXmlParser.START_DOCUMENT:  
-		                    //startDocument(parser);//这里总是执行不到，可以去掉  
 		                    break; 
-		                case KXmlParser.START_TAG:{  
-		                	JudgmentMunicipalities municipalities=new JudgmentMunicipalities();
-		                	if(municipalities.isMunicipalities(parser.getAttributeValue(null, "pyName"))){
-		                		 Province province=new Province();
-		                		 province.setIsMunicipalities(true);
-		                		 pyName=parser.getAttributeValue(null, "url");
-				                 cityName=parser.getAttributeValue(null, "cityname");
-				                 if(pyName!=null&cityName!=null){
-					                 province.setProvinceName(cityName);
-					                 province.setProvinceCode(pyName);
-					                 coolWeatherDB.saveProvince(province);
-				                 }
-		                	}else{
-		                		Province province=new Province();
-		                		province.setIsMunicipalities(false);
-			                    pyName=parser.getAttributeValue(null, "pyName");
-			                    cityName=parser.getAttributeValue(null, "cityname");
-			                    if(pyName!=null&cityName!=null){
-				                    City city=new City();
-				                    city.setCityName(cityName);
-				                    city.setCityCode(pyName);
-				                    city.setProvinceId(provinceId);
-				                    coolWeatherDB.saveCity(city);
-			                    }
-		                	}
+		                case KXmlParser.START_TAG:{ 
+		                	City city=new City();
+		                	if(isMunicipalities){
+		                		  if(parser.getAttributeValue(null, "url")!=null&parser.getAttributeValue(null, "cityname")!=null){
+			                		 pyName=parser.getAttributeValue(null, "url");
+					                 quName=parser.getAttributeValue(null, "cityname");
+		                		  }
+		                		  }else{
+				                    pyName=parser.getAttributeValue(null, "pyName");
+				                    quName=parser.getAttributeValue(null, "cityname");}
+			                 if(pyName.length()>0&quName.length()>0){
+			                     city.setCityName(quName);
+				                 city.setCityCode(pyName);
+				                 city.setProvinceId(provinceId);
+				                 coolWeatherDB.saveCity(city);
+			                 }
 			                    break;
 		                }
 		                case KXmlParser.END_DOCUMENT:{
