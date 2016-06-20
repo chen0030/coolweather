@@ -34,13 +34,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	 */
 	private TextView weatherDespText;
 	/**
-	 * 主页显示当天白天气温
+	 * 主页显示当天实时气温
 	 */
-	private TextView temp1Text;
-	/**
-	 * 主页显示当天夜晚气温
-	 */
-	private TextView temp2Text;
+	private TextView tempRealTime;
 	
 	/**
 	 * 用于显示当天天气描述信息
@@ -100,9 +96,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		weatherInfoLayout=(LinearLayout)findViewById(R.id.weather_info_layout);
 		cityNameText=(TextView)findViewById(R.id.city_name);
 		publishText=(TextView)findViewById(R.id.publishe_text);
+		tempRealTime=(TextView)findViewById(R.id.temp_real_time);
 		weatherDespText=(TextView)findViewById(R.id.weather_desp);
-		temp1Text=(TextView)findViewById(R.id.temp1);
-		temp2Text=(TextView)findViewById(R.id.temp2);
 		weatherDespTodayText=(TextView)findViewById(R.id.weather_desp_today);
 		weatherDespTomorrowText=(TextView)findViewById(R.id.weather_desp_tomorrow);
 		weatherDespAcquiredText=(TextView)findViewById(R.id.weather_desp_acquired);
@@ -191,6 +186,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText.setText(publishTime.substring(0,4)+"年"+publishTime.substring(4,6)+"月"+publishTime.substring(6,8)+"日");
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		tempRealTime.setText(prefs.getString("temp_real_time", ""));
+		weatherDespText.setText(prefs.getString("weather_code_real_time", ""));
 
 		//读取三天的天气信息
 		String regularEx = "#";
@@ -208,7 +205,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			for(int i=0;i<length;i++){
 				if(i==0){
 					tempDayTodayText.setText(strTempDay[i]);
-					temp1Text.setText(strTempDay[i]);
 				}else if(i==1){
 					tempDayTomorrowText.setText(strTempDay[i]);
 				}else if(i==2){
@@ -218,7 +214,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			for(int i=0;i<length;i++){
 				if(i==0){
 					tempNightTodayText.setText(strTempNight[i]);
-					temp2Text.setText(strTempNight[i]);
 				}else if(i==1){
 					tempNightTomorrowText.setText(strTempNight[i]);
 				}else if(i==2){
@@ -228,7 +223,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			for(int i=0;i<length;i++){
 				if(i==0){
 					weatherDespTodayText.setText(strWeatherCode[i]);
-					weatherDespText.setText(strWeatherCode[i]);
+					
 				}else if(i==1){
 					weatherDespTomorrowText.setText(strWeatherCode[i]);
 				}else if(i==2){
