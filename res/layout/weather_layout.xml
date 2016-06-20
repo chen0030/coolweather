@@ -51,13 +51,13 @@
          <LinearLayout 
             android:id="@+id/weather_info_layout"
 	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
+	        android:layout_height="100dp"
 	        android:layout_centerInParent="true"
 	        android:orientation="vertical">
 	       	<TextView 
 	       	    android:id="@+id/temp_real_time"
 	       	    android:layout_width="wrap_content"
-	       	    android:layout_height="80dp"
+	       	    android:layout_height="wrap_content"
 	       	    android:layout_gravity="center_horizontal"
 	       	    android:gravity="center"
 	       	    android:textColor="#fff"
@@ -80,18 +80,14 @@
          </LinearLayout>
     </RelativeLayout>
     
-    <RelativeLayout 
-        android:layout_width="match_parent"
-        android:layout_height="20dp" ></RelativeLayout>
-    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2.93" >
+        android:layout_weight="3">
 
        <LinearLayout 
            android:layout_width="match_parent"
-           android:layout_height="120dp"
+           android:layout_height="match_parent"
            android:baselineAligned="false"
            android:orientation="vertical">
 
@@ -100,7 +96,8 @@
                android:layout_height="0dp"
                android:layout_weight="1"
                android:gravity="center"
-               android:orientation="horizontal" >
+               android:orientation="horizontal"
+               android:background="#3fffffff" >
 				<TextView 
 				    android:id="@+id/week_today"
 				    android:layout_width="50dp"
@@ -157,7 +154,10 @@
                android:layout_height="0dp"
                android:layout_weight="1"
                android:gravity="center"
-               android:orientation="horizontal" >
+               android:background="#3fffffff"
+               android:orientation="horizontal"
+               android:layout_marginTop="4dp"
+               android:layout_marginBottom="4dp" >
                <TextView 
 				    android:id="@+id/week_tomorrow"
 				    android:layout_width="50dp"
@@ -214,7 +214,8 @@
                android:layout_height="0dp"
                android:layout_weight="1"
                android:orientation="horizontal" 
-               android:gravity="center">
+               android:gravity="center"
+               android:background="#3fffffff">
                 <TextView 
 				    android:id="@+id/week_acquired"
 				    android:layout_width="50dp"
