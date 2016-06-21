@@ -35,8 +35,8 @@
     </RelativeLayout>
     <RelativeLayout 
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3">
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp">
         <TextView 
         android:id="@+id/publishe_text"
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
          <LinearLayout 
             android:id="@+id/weather_info_layout"
 	        android:layout_width="wrap_content"
-	        android:layout_height="100dp"
+	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
 	        android:orientation="vertical">
 	       	<TextView 
@@ -63,23 +63,102 @@
 	       	    android:textColor="#fff"
 	       	    android:textSize="60sp"/>
 	       	 <TextView 
+	       	     
 		        android:id="@+id/weather_desp"
 		        android:layout_width="wrap_content"
-		        android:layout_height="30dp"
+		        android:layout_height="wrap_content"
 		        android:layout_gravity="center_horizontal"
 		        android:gravity="center"
 		        android:textColor="#fff"
-		        android:textSize="18sp"/>
+		        android:textSize="15sp"/>
 	         <TextView 
 		        android:id="@+id/current_date"
 		        android:layout_width="wrap_content"
-		        android:layout_height="25dp"
+		        android:layout_height="wrap_content"
 		        android:gravity="center"
 		        android:textColor="#fff"
 		        android:textSize="12sp"/>
          </LinearLayout>
     </RelativeLayout>
-    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="#3fffffff">
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <LinearLayout 
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <ImageView 
+                    android:id="@+id/current_precipition_img"
+                    android:contentDescription="@string/app_name"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/umbrella"/>
+                <TextView 
+                    android:id="@+id/current_precipition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0%"
+                    android:textColor="#fff"
+			        android:textSize="20sp"/>
+                </LinearLayout>
+                <LinearLayout 
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <ImageView 
+                    android:id="@+id/current_temp_img"
+                    android:contentDescription="@string/app_name"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/mercury"/>
+                <TextView 
+                    android:id="@+id/temp_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="32℃"
+                    android:textColor="#fff"
+			        android:textSize="20sp"/>
+                </LinearLayout>
+                <LinearLayout 
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <ImageView 
+                    android:id="@+id/current_wind_img"
+                    android:contentDescription="@string/app_name"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/wind"/>
+                <TextView 
+                    android:id="@+id/current_wind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0米/秒"
+                    android:textColor="#fff"
+			        android:textSize="20sp"/>
+            	</LinearLayout>
+            </LinearLayout>
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -93,10 +172,12 @@
 
            <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="0dp"
-               android:layout_weight="1"
+               android:layout_height="wrap_content"
                android:gravity="center"
                android:orientation="horizontal"
+               android:layout_marginTop="4dp"
+               android:paddingTop="5dp"
+               android:paddingBottom="5dp"
                android:background="#3fffffff" >
 				<TextView 
 				    android:id="@+id/week_today"
@@ -151,11 +232,12 @@
            
            <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="0dp"
-               android:layout_weight="1"
+               android:layout_height="wrap_content"
                android:gravity="center"
                android:background="#3fffffff"
                android:orientation="horizontal"
+               android:paddingTop="5dp"
+               android:paddingBottom="5dp"
                android:layout_marginTop="4dp"
                android:layout_marginBottom="4dp" >
                <TextView 
@@ -211,10 +293,11 @@
            
            <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="0dp"
-               android:layout_weight="1"
+               android:layout_height="wrap_content"
                android:orientation="horizontal" 
                android:gravity="center"
+               android:paddingTop="5dp"
+               android:paddingBottom="5dp"
                android:background="#3fffffff">
                 <TextView 
 				    android:id="@+id/week_acquired"
@@ -272,8 +355,15 @@
     
     <RelativeLayout 
       android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1" >
+      android:layout_height="wrap_content">t
+       <TextView 
+           android:id="@+id/weather_alarm"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerVertical="true"
+           android:gravity="center"
+           android:textColor="#fff"
+           android:textSize="20sp"/>
     </RelativeLayout>
     
 </LinearLayout>
