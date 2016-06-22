@@ -215,16 +215,18 @@ public class Utility {
 								Log.d("Utility","夜晚温度 "+tempNight[i]);
 								Log.d("Utility","天气现象编码 "+weatherPhenomenonDayCode[i]);	
 							}
+							String pTime=jsonObject.getString("000");
 							String tempRealTime=jsonObjectObserve.getString("002");
 							String weatherCodeRealTime=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectObserve.getString("001"));
-							String pTime=jsonObject.getString("000");
-							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonDayCode,pTime,tempLength,tempRealTime,weatherCodeRealTime);
+							String currentPrecipition=jsonObjectObserve.getString("006");
+							String currentWind=jsonObjectObserve.getString("003");
+							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonDayCode,pTime,tempLength,tempRealTime,weatherCodeRealTime,currentPrecipition,currentWind);
 						} catch (Exception e) {
 							// TODO: handle exception
 							e.printStackTrace();
 						}
 	}
-	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String[] tempDay,String[] tempNight,String[] weatherPhenomenonCode,String pTime,int tempLength,String tempRealTime,String weatherCodeRealTime){
+	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String[] tempDay,String[] tempNight,String[] weatherPhenomenonCode,String pTime,int tempLength,String tempRealTime,String weatherCodeRealTime,String currentPrecipition,String currentWind){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
 		SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
@@ -235,6 +237,8 @@ public class Utility {
 		editor.putInt("temp_length", tempLength);
 		editor.putString("temp_real_time", tempRealTime);
 		editor.putString("weather_code_real_time",weatherCodeRealTime);
+		editor.putString("current_precipition",currentPrecipition);
+		editor.putString("current_wind",currentWind);
 		//存放三天的天气信息
 		String regularEx = "#";
 		String str = "";

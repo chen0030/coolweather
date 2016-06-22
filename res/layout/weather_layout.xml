@@ -36,7 +36,7 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp">
+        android:layout_marginBottom="30dp">
         <TextView 
         android:id="@+id/publishe_text"
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
 	       	    android:layout_gravity="center_horizontal"
 	       	    android:gravity="center"
 	       	    android:textColor="#fff"
-	       	    android:textSize="60sp"/>
+	       	    android:textSize="80sp"/>
 	       	 <TextView 
 	       	     
 		        android:id="@+id/weather_desp"
@@ -87,8 +87,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="4dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="#3fffffff">
+        android:paddingBottom="5dp">
         <LinearLayout 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,14 +126,33 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:src="@drawable/mercury"/>
-                <TextView 
+                <LinearLayout 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView 
                     android:id="@+id/temp_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="32℃"
                     android:textColor="#fff"
 			        android:textSize="20sp"/>
+                    <TextView
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:gravity="center"
+				    android:text="@string/temp_string"
+				    android:textColor="#fff"
+				    android:textSize="20sp"/>
+                     <TextView 
+                    android:id="@+id/temp_night"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+			        android:textSize="20sp"/>
+                </LinearLayout>
                 </LinearLayout>
                 <LinearLayout 
                 android:layout_width="0dp"
@@ -176,8 +194,8 @@
                android:gravity="center"
                android:orientation="horizontal"
                android:layout_marginTop="4dp"
-               android:paddingTop="5dp"
-               android:paddingBottom="5dp"
+               android:paddingTop="10dp"
+               android:paddingBottom="10dp"
                android:background="#3fffffff" >
 				<TextView 
 				    android:id="@+id/week_today"
@@ -236,8 +254,8 @@
                android:gravity="center"
                android:background="#3fffffff"
                android:orientation="horizontal"
-               android:paddingTop="5dp"
-               android:paddingBottom="5dp"
+               android:paddingTop="10dp"
+               android:paddingBottom="10dp"
                android:layout_marginTop="4dp"
                android:layout_marginBottom="4dp" >
                <TextView 
@@ -296,8 +314,8 @@
                android:layout_height="wrap_content"
                android:orientation="horizontal" 
                android:gravity="center"
-               android:paddingTop="5dp"
-               android:paddingBottom="5dp"
+               android:paddingTop="10dp"
+               android:paddingBottom="10dp"
                android:background="#3fffffff">
                 <TextView 
 				    android:id="@+id/week_acquired"
@@ -355,7 +373,7 @@
     
     <RelativeLayout 
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">t
+      android:layout_height="wrap_content">
        <TextView 
            android:id="@+id/weather_alarm"
            android:layout_width="wrap_content"

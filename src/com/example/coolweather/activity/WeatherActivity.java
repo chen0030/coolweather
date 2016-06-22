@@ -37,7 +37,14 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	 * 主页显示当天实时气温
 	 */
 	private TextView tempRealTime;
-	
+	/**
+	 * 显示当前降雨量
+	 */
+	private TextView currentPrecipition;
+	/**
+	 * 显示当前风力等级
+	 */
+	private TextView currentWind;
 	/**
 	 * 用于显示当天天气描述信息
 	 */
@@ -85,6 +92,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	/**
 	 * 更新天气按钮
 	 */
+	private TextView tempDay;
+	private TextView tempNight;
 	private Button refreshWeather;
 	private String countyCode;
 	private String cityName;
@@ -114,6 +123,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		cityName=getIntent().getStringExtra("city_name");
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
+		currentPrecipition=(TextView)findViewById(R.id.current_precipition);
+		currentWind=(TextView)findViewById(R.id.current_wind);
+		tempDay=(TextView)findViewById(R.id.temp_day);
+		tempNight=(TextView)findViewById(R.id.temp_night);
 		if(!TextUtils.isEmpty(countyCode)){
 			//有县级代号时就去查询天气
 			publishText.setText("同步中...");
@@ -188,7 +201,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		cityNameText.setVisibility(View.VISIBLE);
 		tempRealTime.setText(prefs.getString("temp_real_time", ""));
 		weatherDespText.setText(prefs.getString("weather_code_real_time", ""));
-
+		currentPrecipition.setText(prefs.getString("current_precipition", "")+"%");
+		currentWind.setText(prefs.getString("current_wind", "")+"米/秒");
+		
 		//读取三天的天气信息
 		String regularEx = "#";
 		String[] strTempDay = null;
@@ -205,6 +220,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			for(int i=0;i<length;i++){
 				if(i==0){
 					tempDayTodayText.setText(strTempDay[i]);
+					tempDay.setText(strTempDay[i]);
 				}else if(i==1){
 					tempDayTomorrowText.setText(strTempDay[i]);
 				}else if(i==2){
@@ -214,6 +230,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			for(int i=0;i<length;i++){
 				if(i==0){
 					tempNightTodayText.setText(strTempNight[i]);
+					tempNight.setText(strTempNight[i]);
 				}else if(i==1){
 					tempNightTomorrowText.setText(strTempNight[i]);
 				}else if(i==2){
