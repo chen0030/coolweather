@@ -205,6 +205,13 @@
 				    android:layout_alignParentStart="true" 
 				    android:gravity="center"
 				    android:textSize="20sp"/>
+				<ImageView 
+				    android:id="@+id/weather_today_image"
+				    android:layout_width="32dp"
+				    android:layout_height="32dp"
+				     android:layout_toLeftOf="@+id/weather_desp_today"
+				     android:layout_toStartOf="@+id/weather_desp_today"
+				    android:src="@drawable/select_weather_ima"/>
                <TextView 
 			        android:id="@+id/weather_desp_today"
 			        android:layout_width="wrap_content"

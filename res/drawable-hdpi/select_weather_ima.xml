@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item android:maxLevel="1" android:drawable="@drawable/weather_01" />
+	<item android:maxLevel="2" android:drawable="@drawable/weather_02" />
+	<item android:maxLevel="3" android:drawable="@drawable/weather_03" />
+	<item android:maxLevel="4" android:drawable="@drawable/weather_04" />
+	<item android:maxLevel="5" android:drawable="@drawable/weather_05" />
+	<item android:maxLevel="7" android:drawable="@drawable/weather_07" />
+	<item android:maxLevel="8" android:drawable="@drawable/weather_08" />
+	<item android:maxLevel="9" android:drawable="@drawable/weather_09" />
+	<item android:maxLevel="10" android:drawable="@drawable/weather_10" />
+	<item android:maxLevel="15" android:drawable="@drawable/weather_15" />
+	<item android:maxLevel="16" android:drawable="@drawable/weather_16" />
+	<item android:maxLevel="17" android:drawable="@drawable/weather_17" />
+	<item android:maxLevel="19" android:drawable="@drawable/weather_19" />
+	<item android:maxLevel="30" android:drawable="@drawable/weather_30" />
+	<item android:maxLevel="31" android:drawable="@drawable/weather_31" />
+	<item android:maxLevel="53" android:drawable="@drawable/weather_53" />
+</level-list>
