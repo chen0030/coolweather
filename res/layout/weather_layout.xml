@@ -37,18 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp">
-        <TextView 
-        android:id="@+id/publishe_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="#fff"
-        android:textSize="18sp"/>
-         <LinearLayout 
+         <RelativeLayout 
             android:id="@+id/weather_info_layout"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -58,16 +47,25 @@
 	       	    android:id="@+id/temp_real_time"
 	       	    android:layout_width="wrap_content"
 	       	    android:layout_height="wrap_content"
-	       	    android:layout_gravity="center_horizontal"
-	       	    android:gravity="center"
+	       	    android:layout_centerHorizontal="true"
 	       	    android:textColor="#fff"
 	       	    android:textSize="80sp"/>
+	       	<ImageView 
+				android:id="@+id/weather_real_time_image"
+				android:contentDescription="@string/app_name"
+				android:layout_width="64dp"
+				android:layout_height="64dp"
+				android:layout_toRightOf="@+id/temp_real_time"
+				android:layout_toEndOf="@+id/temp_real_time"
+				android:layout_alignBottom="@+id/temp_real_time"
+				android:layout_marginBottom="7dp"
+				android:src="@drawable/select_weather_ima"/>
 	       	 <TextView 
-	       	     
 		        android:id="@+id/weather_desp"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_gravity="center_horizontal"
+		        android:layout_below="@+id/temp_real_time"
+		        android:layout_centerHorizontal="true"
 		        android:gravity="center"
 		        android:textColor="#fff"
 		        android:textSize="15sp"/>
@@ -76,9 +74,11 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:gravity="center"
+		        android:layout_centerHorizontal="true"
+		        android:layout_below="@+id/weather_desp"
 		        android:textColor="#fff"
 		        android:textSize="12sp"/>
-         </LinearLayout>
+         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout 
         android:layout_width="match_parent"
@@ -110,7 +110,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="0%"
                     android:textColor="#fff"
 			        android:textSize="20sp"/>
                 </LinearLayout>
@@ -171,7 +170,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="0米/秒"
                     android:textColor="#fff"
 			        android:textSize="20sp"/>
             	</LinearLayout>
@@ -199,14 +197,16 @@
                android:background="#3fffffff" >
 				<TextView 
 				    android:id="@+id/week_today"
-				    android:layout_width="50dp"
+				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_alignParentLeft="true"
 				    android:layout_alignParentStart="true" 
 				    android:gravity="center"
+				    android:textColor="#fff"
 				    android:textSize="20sp"/>
 				<ImageView 
 				    android:id="@+id/weather_today_image"
+				    android:contentDescription="@string/app_name"
 				    android:layout_width="32dp"
 				    android:layout_height="32dp"
 				     android:layout_toLeftOf="@+id/weather_desp_today"
@@ -267,12 +267,21 @@
                android:layout_marginBottom="4dp" >
                <TextView 
 				    android:id="@+id/week_tomorrow"
-				    android:layout_width="50dp"
+				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_alignParentLeft="true"
 				     android:layout_alignParentStart="true" 
 				    android:gravity="center"
+				    android:textColor="#fff"
 				    android:textSize="20sp"/>
+               <ImageView 
+				    android:id="@+id/weather_tomorrow_image"
+				    android:contentDescription="@string/app_name"
+				    android:layout_width="32dp"
+				    android:layout_height="32dp"
+				     android:layout_toLeftOf="@+id/weather_desp_tomorrow"
+				     android:layout_toStartOf="@+id/weather_desp_tomorrow"
+				    android:src="@drawable/select_weather_ima"/>
                 <TextView 
 			        android:id="@+id/weather_desp_tomorrow"
 			        android:layout_width="wrap_content"
@@ -326,12 +335,21 @@
                android:background="#3fffffff">
                 <TextView 
 				    android:id="@+id/week_acquired"
-				    android:layout_width="50dp"
+				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_alignParentLeft="true"
 				     android:layout_alignParentStart="true" 
 				    android:gravity="center"
+				    android:textColor="#fff"
 				    android:textSize="20sp"/>
+                <ImageView 
+				    android:id="@+id/weather_acquired_image"
+				    android:contentDescription="@string/app_name"
+				    android:layout_width="32dp"
+				    android:layout_height="32dp"
+				     android:layout_toLeftOf="@+id/weather_desp_acquired"
+				     android:layout_toStartOf="@+id/weather_desp_acquired"
+				    android:src="@drawable/select_weather_ima"/>
                <TextView 
 			        android:id="@+id/weather_desp_acquired"
 			        android:layout_width="wrap_content"
@@ -390,5 +408,19 @@
            android:textColor="#fff"
            android:textSize="20sp"/>
     </RelativeLayout>
-    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+         <TextView 
+        android:id="@+id/release_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="#fff"
+        android:textSize="18sp"/>
+    </RelativeLayout>
 </LinearLayout>

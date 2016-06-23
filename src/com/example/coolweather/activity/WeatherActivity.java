@@ -1,5 +1,11 @@
 package com.example.coolweather.activity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,17 +16,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.coolweather.R;
+import com.example.coolweather.model.WeatherPhenomenon;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
 
 public class WeatherActivity extends Activity implements OnClickListener{
 	
-	private LinearLayout weatherInfoLayout;
+	private RelativeLayout weatherInfoLayout;
 	/**
 	 * 用于显示城市名
 	 */
@@ -28,7 +36,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	/**
 	 * 用于显示发布时间
 	 */
-	private TextView publishText;
+	private TextView releaseTime;
 	/**
 	 * 主页显示当天天气描述
 	 */
@@ -92,9 +100,38 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	/**
 	 * 更新天气按钮
 	 */
+	private Button refreshWeather;
+	/**
+	 * 显示当天天气图标
+	 */
+	private ImageView weatherTodayImage;
+	/**
+	 * 显示第二天天气图标
+	 */
+	private ImageView weatherTomorrowImage;
+	/**
+	 * 显示第三天天气图标
+	 */
+	private ImageView weatherAcquiredImage;
+	/**
+	 * 显示实时天气图标
+	 */
+	private ImageView weatherRealTimeImage;
+	/**
+	 * 显示当天星期几
+	 */
+	private TextView weekToday;
+	/**
+	 * 显示第二天星期几
+	 */
+	private TextView weekTomorrow;
+	/**
+	 * 显示第三天星期几
+	 */
+	private TextView weekAcquired;
+	
 	private TextView tempDay;
 	private TextView tempNight;
-	private Button refreshWeather;
 	private String countyCode;
 	private String cityName;
 	@Override
@@ -102,9 +139,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
-		weatherInfoLayout=(LinearLayout)findViewById(R.id.weather_info_layout);
+		weatherInfoLayout=(RelativeLayout)findViewById(R.id.weather_info_layout);
 		cityNameText=(TextView)findViewById(R.id.city_name);
-		publishText=(TextView)findViewById(R.id.publishe_text);
+		releaseTime=(TextView)findViewById(R.id.release_time);
 		tempRealTime=(TextView)findViewById(R.id.temp_real_time);
 		weatherDespText=(TextView)findViewById(R.id.weather_desp);
 		weatherDespTodayText=(TextView)findViewById(R.id.weather_desp_today);
@@ -127,15 +164,27 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentWind=(TextView)findViewById(R.id.current_wind);
 		tempDay=(TextView)findViewById(R.id.temp_day);
 		tempNight=(TextView)findViewById(R.id.temp_night);
+		weatherTodayImage=(ImageView)findViewById(R.id.weather_today_image);
+		weatherTomorrowImage=(ImageView)findViewById(R.id.weather_tomorrow_image);
+		weatherAcquiredImage=(ImageView)findViewById(R.id.weather_acquired_image);
+		weatherRealTimeImage=(ImageView)findViewById(R.id.weather_real_time_image);
+		weekToday=(TextView)findViewById(R.id.week_today);
+		weekTomorrow=(TextView)findViewById(R.id.week_tomorrow);
+		weekAcquired=(TextView)findViewById(R.id.week_acquired);
 		if(!TextUtils.isEmpty(countyCode)){
 			//有县级代号时就去查询天气
-			publishText.setText("同步中...");
+			releaseTime.setText("同步中...");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
 			cityNameText.setVisibility(View.INVISIBLE);
 			queryFromServer(countyCode,cityName);
 		}
 		else{
-			showWeather();
+				try {
+					showWeather();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 	}
 	@Override
@@ -149,7 +198,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			finish();
 			break;
 		case R.id.refresh_weather:
-			publishText.setText("同步中...");
+			releaseTime.setText("同步中...");
 			String weatherCode=countyCode;
 			if(!TextUtils.isEmpty(weatherCode)){
 				queryFromServer(weatherCode, cityName);
@@ -172,7 +221,12 @@ public class WeatherActivity extends Activity implements OnClickListener{
 				Utility.handleWeatherResponse(WeatherActivity.this,response,cityName, weatherCode);
 				runOnUiThread(new Runnable() {
 					public void run() {
-						showWeather();
+							try {
+								showWeather();
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 					}
 				});
 			}
@@ -182,7 +236,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 				// TODO Auto-generated method stub
 				runOnUiThread(new Runnable() {
 					public void run() {
-						publishText.setText("同步失败");
+						releaseTime.setText("同步失败");
 					}
 				});
 			}
@@ -190,21 +244,28 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	}
 	/**
 	 * 从SharedPreferences文件中读取存储的天气信息，并显示
+	 * @throws ParseException 
 	 */
-	private void showWeather(){
+	private void showWeather() throws ParseException {
 		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+		WeatherPhenomenon weatherPhenomenon=new WeatherPhenomenon();
 		cityNameText.setText(prefs.getString("city_name", ""));
 		String publishTime=prefs.getString("publish_time", "");
-		publishText.setText("今天"+publishTime.substring(8,10)+":"+publishTime.substring(10)+"发布");
-		currentDateText.setText(publishTime.substring(0,4)+"年"+publishTime.substring(4,6)+"月"+publishTime.substring(6,8)+"日");
+		releaseTime.setText("今天"+prefs.getString("release_time", "")+":"+"发布");
+		currentDateText.setText("更新日期:"+publishTime.substring(0,4)+"年"+publishTime.substring(4,6)+"月"+publishTime.substring(6,8)+"日");
+		String currentData=publishTime.substring(0,4)+"-"+publishTime.substring(4,6)+"-"+publishTime.substring(6,8);
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
 		tempRealTime.setText(prefs.getString("temp_real_time", ""));
-		weatherDespText.setText(prefs.getString("weather_code_real_time", ""));
+		weatherDespText.setText(weatherPhenomenon.returnWeatherPhenomenon(prefs.getString("weather_code_real_time", "")));
 		currentPrecipition.setText(prefs.getString("current_precipition", "")+"%");
 		currentWind.setText(prefs.getString("current_wind", "")+"米/秒");
+		int j=0;
+		weekToday.setText(getWeek(currentData,j));
+		weekTomorrow.setText(getWeek(currentData,j+1));
+		weekAcquired.setText(getWeek(currentData,j+2));
+		weatherRealTimeImage.setImageLevel(Integer.parseInt(prefs.getString("weather_code_real_time", "")));
 		
-		//读取三天的天气信息
 		String regularEx = "#";
 		String[] strTempDay = null;
 		String[] strTempNight=null;
@@ -219,8 +280,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		if(prefs.getInt("temp_lenght", 1)>0){
 			for(int i=0;i<length;i++){
 				if(i==0){
-					tempDayTodayText.setText(strTempDay[i]);
-					tempDay.setText(strTempDay[i]);
+					if(strTempDay[i].equals("$")){
+						tempDayTodayText.setText(prefs.getString("temp_real_time", ""));
+						tempDay.setText(prefs.getString("temp_real_time", ""));
+					}else{
+						tempDayTodayText.setText(strTempDay[i]);
+						tempDay.setText(strTempDay[i]);
+					}
 				}else if(i==1){
 					tempDayTomorrowText.setText(strTempDay[i]);
 				}else if(i==2){
@@ -229,8 +295,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			}
 			for(int i=0;i<length;i++){
 				if(i==0){
-					tempNightTodayText.setText(strTempNight[i]);
-					tempNight.setText(strTempNight[i]);
+					if(strTempNight[i].equals("$")){
+						tempNightTodayText.setText(prefs.getString("temp_real_time", ""));
+						tempNight.setText(prefs.getString("temp_real_time", ""));
+					}else{
+						tempNightTodayText.setText(strTempNight[i]);
+						tempNight.setText(strTempNight[i]);
+					}
 				}else if(i==1){
 					tempNightTomorrowText.setText(strTempNight[i]);
 				}else if(i==2){
@@ -239,14 +310,56 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			}
 			for(int i=0;i<length;i++){
 				if(i==0){
-					weatherDespTodayText.setText(strWeatherCode[i]);
+//					weatherDespTodayText.setText(weatherPhenomenon.returnWeatherPhenomenon(strWeatherCode[i]));
+					weatherTodayImage.setImageLevel(Integer.parseInt(strWeatherCode[i]));
 					
 				}else if(i==1){
-					weatherDespTomorrowText.setText(strWeatherCode[i]);
+//					weatherDespTomorrowText.setText(weatherPhenomenon.returnWeatherPhenomenon(strWeatherCode[i]));
+					weatherTomorrowImage.setImageLevel(Integer.parseInt(strWeatherCode[i]));
 				}else if(i==2){
-					weatherDespAcquiredText.setText(strWeatherCode[i]);
+//					weatherDespAcquiredText.setText(weatherPhenomenon.returnWeatherPhenomenon(strWeatherCode[i]));
+					weatherAcquiredImage.setImageLevel(Integer.parseInt(strWeatherCode[i]));
 				}
 			}
 		}
+	}
+	/**
+	 * 判断星期几
+	 * @throws ParseException 
+	 */
+	private String getWeek(String currentData,int i) throws ParseException{
+		String week="";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+		Date date = sdf.parse(currentData);
+		Calendar calendar = Calendar.getInstance();  
+	    calendar.setTime(date);
+	    int dayIndex = calendar.get(Calendar.DAY_OF_WEEK);
+	    dayIndex=dayIndex+i;
+	    switch (dayIndex) {
+		case 1:
+			week="星期日";
+			break;
+		case 2:
+			week="星期一";
+			break;
+		case 3:
+			week="星期二";
+			break;
+		case 4:
+			week="星期三";
+			break;
+		case 5:
+			week="星期四";
+			break;
+		case 6:
+			week="星期五";
+			break;
+		case 7:
+			week="星期六";
+			break;
+		default:
+			break;
+		}
+	    return week;
 	}
 }

@@ -44,10 +44,12 @@ public class Utility {
 		                case KXmlParser.START_TAG:{
 		                	pyName=parser.getAttributeValue(null, "pyName");
 		                	quName=parser.getAttributeValue(null, "quName");
-				            Province province=new Province();
-				            province.setProvinceName(quName);
-				            province.setProvinceCode(pyName);
-				            coolWeatherDB.saveProvince(province);
+		                	if(pyName!=null&quName!=null){
+					            Province province=new Province();
+					            province.setProvinceName(quName);
+					            province.setProvinceCode(pyName);
+					            coolWeatherDB.saveProvince(province);
+		                	}
 			                 }
 		                    break;
 		                case KXmlParser.END_DOCUMENT:{
@@ -193,22 +195,63 @@ public class Utility {
 							String[] tempNight=new String[tempLength];
 							String[] weatherPhenomenonDayCode=new String[tempLength];
 							String[] weatherPhenomenonNightCode=new String[tempLength];
-							WeatherPhenomenon weatherPhenomenon=new WeatherPhenomenon();
 							for(int i=0;i<tempLength;i++){
 								JSONObject jsonObjectResponse=(JSONObject)jsonArray.opt(i);
-								if(jsonObjectResponse.getString("003").length()>0){
-									tempDay[i] =jsonObjectResponse.getString("003");  //003白天温度
-									tempNight[i] =jsonObjectResponse.getString("004");//004晚上温度
-								}else{
-									tempDay[i] ="No Temp";
-									tempNight[i] =jsonObjectResponse.getString("004");
+								if(jsonObjectResponse.has("003")&jsonObjectResponse.has("004")){
+									if(jsonObjectResponse.getString("003").length()>0&jsonObjectResponse.getString("004").length()>0){
+										tempDay[i] =jsonObjectResponse.getString("003");  //003白天温度
+										tempNight[i] =jsonObjectResponse.getString("004");//004晚上温度
+									}else if(jsonObjectResponse.getString("003").length()>0){
+										tempDay[i] =jsonObjectResponse.getString("003");;
+										tempNight[i] ="$";
+									}else if(jsonObjectResponse.getString("004").length()>0){
+										tempDay[i] ="$";
+										tempNight[i] =jsonObjectResponse.getString("004");
+									}
+								}else if(jsonObjectResponse.has("003")){
+									if(jsonObjectResponse.getString("003").length()>0){
+										tempDay[i] =jsonObjectResponse.getString("003");;
+										tempNight[i] ="$";
+									}else{
+										tempDay[i] ="$";
+										tempNight[i] ="$";
+									}
+								}else if(jsonObjectResponse.has("004")){
+									if(jsonObjectResponse.getString("004").length()>0){
+										tempDay[i] ="$";
+										tempNight[i] =jsonObjectResponse.getString("004");
+									}else{
+										tempDay[i] ="$";
+										tempNight[i] ="$";
+									}
 								}
-								
-								if(jsonObjectResponse.getString("001").length()>0){
-									weatherPhenomenonDayCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("001"));//001白天天气现象编码
-								}else{
-									weatherPhenomenonDayCode[i]="The day is over";
-									weatherPhenomenonNightCode[i]=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectResponse.getString("002"));
+								if(jsonObjectResponse.has("001")&jsonObjectResponse.has("002")){
+									if(jsonObjectResponse.getString("001").length()>0&jsonObjectResponse.getString("002").length()>0){
+										weatherPhenomenonDayCode[i]=jsonObjectResponse.getString("001");//001白天天气现象编码
+										weatherPhenomenonNightCode[i]=jsonObjectResponse.getString("002");
+									}else if(jsonObjectResponse.getString("001").length()>0){
+										weatherPhenomenonDayCode[i]=jsonObjectResponse.getString("001");//001白天天气现象编码
+										weatherPhenomenonNightCode[i]="99";
+									}else if(jsonObjectResponse.getString("004").length()>0){
+										weatherPhenomenonDayCode[i]=jsonObjectResponse.getString("002");//001白天天气现象编码
+										weatherPhenomenonNightCode[i]="99";
+									}
+								}else if(jsonObjectResponse.has("001")){
+									if(jsonObjectResponse.getString("001").length()>0){
+										weatherPhenomenonDayCode[i]=jsonObjectResponse.getString("001");//001白天天气现象编码
+										weatherPhenomenonNightCode[i]="99";
+									}else{
+										weatherPhenomenonDayCode[i]="99";//001白天天气现象编码
+										weatherPhenomenonNightCode[i]="99";
+									}
+								}else if(jsonObjectResponse.has("002")){
+									if(jsonObjectResponse.getString("002").length()>0){
+										weatherPhenomenonDayCode[i]=jsonObjectResponse.getString("002");//001白天天气现象编码
+										weatherPhenomenonNightCode[i]="99";
+									}else{
+										tempDay[i] ="$";
+										tempNight[i] ="$";
+									}
 								}
 								 //00晚上天气现象编码	
 								Log.d("Utility","白天温度  "+tempDay[i]);
@@ -216,17 +259,18 @@ public class Utility {
 								Log.d("Utility","天气现象编码 "+weatherPhenomenonDayCode[i]);	
 							}
 							String pTime=jsonObject.getString("000");
+							String releaseTime=jsonObjectObserve.getString("000");
 							String tempRealTime=jsonObjectObserve.getString("002");
-							String weatherCodeRealTime=weatherPhenomenon.returnWeatherPhenomenon(jsonObjectObserve.getString("001"));
+							String weatherCodeRealTime=jsonObjectObserve.getString("001");
 							String currentPrecipition=jsonObjectObserve.getString("006");
 							String currentWind=jsonObjectObserve.getString("003");
-							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonDayCode,pTime,tempLength,tempRealTime,weatherCodeRealTime,currentPrecipition,currentWind);
+							saveWeatherInfo(context,cityName,weatherCode,tempDay,tempNight,weatherPhenomenonDayCode,pTime,tempLength,tempRealTime,weatherCodeRealTime,currentPrecipition,currentWind,releaseTime);
 						} catch (Exception e) {
 							// TODO: handle exception
 							e.printStackTrace();
 						}
 	}
-	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String[] tempDay,String[] tempNight,String[] weatherPhenomenonCode,String pTime,int tempLength,String tempRealTime,String weatherCodeRealTime,String currentPrecipition,String currentWind){
+	public static void saveWeatherInfo(Context context,String cityName,String weaherCode,String[] tempDay,String[] tempNight,String[] weatherPhenomenonCode,String pTime,int tempLength,String tempRealTime,String weatherCodeRealTime,String currentPrecipition,String currentWind,String releaseTime){
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy年M月d日",Locale.CHINA);
 		SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
@@ -239,6 +283,7 @@ public class Utility {
 		editor.putString("weather_code_real_time",weatherCodeRealTime);
 		editor.putString("current_precipition",currentPrecipition);
 		editor.putString("current_wind",currentWind);
+		editor.putString("release_time", releaseTime);
 		//存放三天的天气信息
 		String regularEx = "#";
 		String str = "";
