@@ -102,7 +102,12 @@ public class ChooseAreaActivity extends Activity{
 				// TODO Auto-generated method stub
 				if(currentLevel==LEVEL_PROVINCE){
 					selectedProvince=provinceList.get(index);
-					queryCities();
+					String provinceSelect= selectedProvince.getProvinceCode();
+					if(selectedProvince.getProvinceCode().equals("diaoyudao")&selectedProvince.getProvinceCode().equals("nanshadao")&selectedProvince.getProvinceCode().equals("xisha")){
+						Toast.makeText(ChooseAreaActivity.this, "暂不支持钓鱼岛、南沙、西沙地区选择", Toast.LENGTH_SHORT).show();
+					}else{
+						queryCities();
+					}
 				}else if(currentLevel==LEVEL_CITY) {
 					selectedCity=cityList.get(index);
 					String cityCode=selectedCity.getCityCode();
@@ -117,7 +122,10 @@ public class ChooseAreaActivity extends Activity{
 						intent.putExtra("city_name", cityName);
 						startActivity(intent);
 						finish();
-					}else{
+					}else if(selectedProvince.getProvinceCode().equals("diaoyudao")&selectedProvince.getProvinceCode().equals("nanshadao")&selectedProvince.getProvinceCode().equals("xisha")){
+						Toast.makeText(ChooseAreaActivity.this, "暂不支持钓鱼岛、南沙、西沙地区选择", Toast.LENGTH_SHORT).show();
+					}
+					else{
 						queryCounties();
 					}
 				}else if(currentLevel==LEVEL_COUNTY){

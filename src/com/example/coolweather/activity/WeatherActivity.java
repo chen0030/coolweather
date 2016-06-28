@@ -56,15 +56,15 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	/**
 	 * 用于显示当天天气描述信息
 	 */
-	private TextView weatherDespTodayText;
+//	private TextView weatherDespTodayText;
 	/**
 	 * 用于显示第二天天气描述信息
 	 */
-	private TextView weatherDespTomorrowText;
+//	private TextView weatherDespTomorrowText;
 	/**
 	 * 用于显示第三天天气描述信息
 	 */
-	private TextView weatherDespAcquiredText;
+//	private TextView weatherDespAcquiredText;
 	/**
 	 * 用于显示当天白天气温
 	 */
@@ -144,9 +144,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		releaseTime=(TextView)findViewById(R.id.release_time);
 		tempRealTime=(TextView)findViewById(R.id.temp_real_time);
 		weatherDespText=(TextView)findViewById(R.id.weather_desp);
-		weatherDespTodayText=(TextView)findViewById(R.id.weather_desp_today);
-		weatherDespTomorrowText=(TextView)findViewById(R.id.weather_desp_tomorrow);
-		weatherDespAcquiredText=(TextView)findViewById(R.id.weather_desp_acquired);
+//		weatherDespTodayText=(TextView)findViewById(R.id.weather_desp_today);
+//		weatherDespTomorrowText=(TextView)findViewById(R.id.weather_desp_tomorrow);
+//		weatherDespAcquiredText=(TextView)findViewById(R.id.weather_desp_acquired);
 		tempDayTodayText=(TextView)findViewById(R.id.temp_day_today);
 		tempNightTodayText=(TextView)findViewById(R.id.temp_night_today);
 		tempDayTomorrowText=(TextView)findViewById(R.id.temp_day_tomorrow);

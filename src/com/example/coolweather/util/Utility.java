@@ -20,7 +20,6 @@ import com.example.coolweather.model.City;
 import com.example.coolweather.model.County;
 import com.example.coolweather.model.JudgmentMunicipalities;
 import com.example.coolweather.model.Province;
-import com.example.coolweather.model.WeatherPhenomenon;
 public class Utility {
 	/**
 	 * 判断是否为直辖市
