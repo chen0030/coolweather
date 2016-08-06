@@ -65,25 +65,6 @@ public class Utility {
 		return false;	
 	}
 	/**
-	 * 			解析JSON数据
-	 *  //			try {
-		//				JSONObject jsonObject=new JSONObject(response);
-		//				JSONArray jsonArray=jsonObject.getJSONArray("retData");
-		//				for(int i=0;i<jsonArray.length();i++){
-		//					JSONObject jsonObjectResponse=(JSONObject)jsonArray.opt(i);
-		//					int id=jsonObjectResponse.getInt("area_id");
-		//					String name=jsonObjectResponse.getString("name_cn");
-		//					Log.d("Utility","area_id is "+id);
-		//					Log.d("Utility","name_cn is "+name);
-		//					
-		//				}
-		//			} catch (Exception e) {
-		//				// TODO: handle exception
-		//				e.printStackTrace();
-		//			}
-	 */
-	
-	/**
 	 * 解析和处理服务器返回的市级数据
 	 */
 	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB,String response,int provinceId,String cityName){

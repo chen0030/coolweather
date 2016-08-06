@@ -4,7 +4,7 @@ public class WeatherPhenomenon {
 	private String sunny="Çç";
 	private String cloudy="¶àÔÆ";
 	private String overcast="Òõ";
-	private String shower="¡¢ÕóÓê";
+	private String shower="ÕóÓê";
 	private String thunderShower="À×ÕóÓê";
 	private String thunderShower_with_hail="À×ÕóÓê°éÓĞ±ù±¢";
 	private String sleet="Óê¼ĞÑ©";

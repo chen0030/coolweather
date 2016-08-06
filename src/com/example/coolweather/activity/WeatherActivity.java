@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.coolweather.R;
 import com.example.coolweather.model.WeatherPhenomenon;
+import com.example.coolweather.service.AutoUpdateService;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
@@ -138,6 +139,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
 		weatherInfoLayout=(RelativeLayout)findViewById(R.id.weather_info_layout);
 		cityNameText=(TextView)findViewById(R.id.city_name);
@@ -198,9 +201,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			finish();
 			break;
 		case R.id.refresh_weather:
-			releaseTime.setText("同步中...");
 			String weatherCode=countyCode;
 			if(!TextUtils.isEmpty(weatherCode)){
+				releaseTime.setText("同步中...");
 				queryFromServer(weatherCode, cityName);
 			}
 			break;
@@ -249,9 +252,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	private void showWeather() throws ParseException {
 		SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
 		WeatherPhenomenon weatherPhenomenon=new WeatherPhenomenon();
-		cityNameText.setText(prefs.getString("city_name", ""));
+		cityNameText.setText(prefs.getString("city_name", "")); 
 		String publishTime=prefs.getString("publish_time", "");
-		releaseTime.setText("今天"+prefs.getString("release_time", "")+":"+"发布");
+		releaseTime.setText("今天"+prefs.getString("release_time", "")+"发布");
 		currentDateText.setText("更新日期:"+publishTime.substring(0,4)+"年"+publishTime.substring(4,6)+"月"+publishTime.substring(6,8)+"日");
 		String currentData=publishTime.substring(0,4)+"-"+publishTime.substring(4,6)+"-"+publishTime.substring(6,8);
 		weatherInfoLayout.setVisibility(View.VISIBLE);
@@ -321,6 +324,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					weatherAcquiredImage.setImageLevel(Integer.parseInt(strWeatherCode[i]));
 				}
 			}
+			Intent intent=new Intent(this,AutoUpdateService.class);
+			startService(intent);
 		}
 	}
 	/**

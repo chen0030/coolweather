@@ -3,12 +3,6 @@ package com.example.coolweather.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
-
 import com.example.coolweather.R;
 import com.example.coolweather.db.CoolWeatherDB;
 import com.example.coolweather.model.City;
@@ -18,7 +12,6 @@ import com.example.coolweather.model.Province;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,7 +19,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -99,44 +91,31 @@ public class ChooseAreaActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view,
 					int index, long arg3) {
-				// TODO Auto-generated method stub
 				if(currentLevel==LEVEL_PROVINCE){
 					selectedProvince=provinceList.get(index);
-					String provinceSelect= selectedProvince.getProvinceCode();
-					if(selectedProvince.getProvinceCode().equals("diaoyudao")&selectedProvince.getProvinceCode().equals("nanshadao")&selectedProvince.getProvinceCode().equals("xisha")){
+					if(selectedProvince.getProvinceCode().equals("diaoyudao")||selectedProvince.getProvinceCode().equals("nanshadao")||selectedProvince.getProvinceCode().equals("xisha")){
 						Toast.makeText(ChooseAreaActivity.this, "暂不支持钓鱼岛、南沙、西沙地区选择", Toast.LENGTH_SHORT).show();
 					}else{
 						queryCities();
 					}
 				}else if(currentLevel==LEVEL_CITY) {
 					selectedCity=cityList.get(index);
-					String cityCode=selectedCity.getCityCode();
-					String cityName=selectedCity.getCityName();
-					Log.d("ChooseArea", "County Code is "+cityCode);
-					Log.d("ChooseArea", "County Name is "+cityName);
 					JudgmentMunicipalities municipalities=new JudgmentMunicipalities();
 					boolean isMunicipalities=municipalities.isMunicipalities(selectedProvince.getProvinceCode());
 					if(isMunicipalities){
 						Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-						intent.putExtra("county_code", cityCode);
-						intent.putExtra("city_name", cityName);
+						intent.putExtra("county_code", selectedCity.getCityCode());
+						intent.putExtra("city_name", selectedCity.getCityName());
 						startActivity(intent);
 						finish();
-					}else if(selectedProvince.getProvinceCode().equals("diaoyudao")&selectedProvince.getProvinceCode().equals("nanshadao")&selectedProvince.getProvinceCode().equals("xisha")){
-						Toast.makeText(ChooseAreaActivity.this, "暂不支持钓鱼岛、南沙、西沙地区选择", Toast.LENGTH_SHORT).show();
-					}
-					else{
+					}else{
 						queryCounties();
 					}
 				}else if(currentLevel==LEVEL_COUNTY){
 					County selectCounty=countyList.get(index);
-					Log.d("ChooseArea", "County Code is "+selectCounty.getCountyCode());
-					Log.d("ChooseArea", "County Name is "+selectCounty.getCountyName());
-					String countyCode=selectCounty.getCountyCode();
-					String countyName=selectCounty.getCountyName();
 					Intent intent=new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-					intent.putExtra("county_code", countyCode);
-					intent.putExtra("city_name", countyName);
+					intent.putExtra("county_code", selectCounty.getCountyCode());
+					intent.putExtra("city_name", selectCounty.getCountyName());
 					startActivity(intent);
 					finish();
 				}
@@ -211,12 +190,9 @@ public class ChooseAreaActivity extends Activity{
 	private void queryFromServer(final String code,final String type){
 		String address;
 		if(!TextUtils.isEmpty(code)){
-//			address="http://apis.baidu.com/tianyiweather/basicforecast/weatherapi"+"?area="+code;
 			address="http://flash.weather.com.cn/wmaps/xml/"+code+".xml";
 		}else{
-//			address="http://apis.baidu.com/apistore/weatherservice/citylist?cityname=%E6%9C%9D%E9%98%B3";
 			address="http://flash.weather.com.cn/wmaps/xml/china.xml";
-//			address="http://www.webxml.com.cn/webservices/weatherwebservice.asmx/getSupportProvince";
 		}
 		showProgressDialog();
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
